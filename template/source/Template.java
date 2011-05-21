@@ -12,26 +12,27 @@ import java.util.StringTokenizer;
 public class Template {
 	private static String FILENAME = "stdin";
 	static {
-		//FILENAME = "A-sample";
+		//FILENAME = "Template-sample";
+		//FILENAME = "Template-small";
+		//FILENAME = "Template-large";
 	}
 
 	public static void main(String[] args) {
 		new Template().run();
 	}
 
-	private final PrintStream out;
+	private PrintStream out;
 	private final BufferedReader reader;
 	private StringTokenizer tokenizer = new StringTokenizer("");
 
 	public Template() {
-		System.out.println("hello world");
 		try {
+			out = System.out;
 			if (FILENAME == "stdin") {
-				out = System.out;
 				reader = new BufferedReader(new InputStreamReader(System.in));
 			} else {
-				out = new PrintStream(new FileOutputStream(FILENAME + ".out"));
-				reader = new BufferedReader(new FileReader(FILENAME + ".in"));
+				out = new PrintStream(new FileOutputStream("source/" + FILENAME + ".out"));
+				reader = new BufferedReader(new FileReader("source/" + FILENAME + ".in"));
 			}
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
