@@ -1,3 +1,7 @@
+#!/bin/bash
+
+# It may be useful to put a user_config.py in the template directory.
+
 NAME=$1
 if [ "$NAME" == "" ]; then
   NAME=`date +%Y-%m-%d`
