@@ -7,10 +7,12 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.concurrent.*;
 
 public class Template {
-	private static String FILENAME = "stdin";
+	private static String FILENAME = null;
 	static {
 		//FILENAME = "Template-sample";
 		//FILENAME = "Template-small";
@@ -27,8 +29,8 @@ public class Template {
 
 	public Template() {
 		try {
-			out = System.out;
-			if (FILENAME == "stdin") {
+			if (FILENAME == null) {
+                out = System.out;
 				reader = new BufferedReader(new InputStreamReader(System.in));
 			} else {
 				out = new PrintStream(new FileOutputStream("source/" + FILENAME + ".out"));
@@ -43,45 +45,63 @@ public class Template {
 		try {
 			runCases();
 		} finally {
-			closeAll();
-		}
+            out.close();
+        }
 	}
 
-	private void runCode() {
-		int a = getInt();
-		int b = getInt();
-		out.print(a + b);
-	}
+    public void debug(String s, Object... args) {
+        System.err.printf("DEBUG: " + s + "\n", args);
+    }
 
 	private void runCases() {
-		int cases = getInt();
-		for (int c = 1; c <= cases; c++) {
-			out.print("Case #" + c + ": ");
-			runCode();
-		}
+        int numProcs = Runtime.getRuntime().availableProcessors();
+        debug("num processors: %d", numProcs);
+        ExecutorService service = Executors.newFixedThreadPool(numProcs);
+        int cases = getInt();
+        ArrayList<Future<String>> list = new ArrayList<Future<String>>();
+        for (int c = 1; c <= cases; c++) {
+            Solver solver = new Solver(c);
+            list.add(service.submit(solver));
+        }
+        for (int c = 1; c <= cases; c++) {
+            Future<String> future = list.get(c - 1);
+            try {
+                String s = "Case #" + c + ": " + future.get();
+                out.println(s);
+                if (out != System.out) {
+                    System.out.println(s);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.getCause().printStackTrace();
+            }
+        }
+        debug("done with all!");
 	}
 
-	private void closeAll() {
-		out.close();
+    public String readLine() {
+        try {
+            return reader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getToken() {
+        while (true) {
+            if (tokenizer.hasMoreTokens()) {
+                return tokenizer.nextToken();
+            }
+            String s = readLine();
+            if (s == null) {
+                return null;
+            }
+            tokenizer = new StringTokenizer(s, " \t\n\r");
+        }
 	}
 
-	private String getToken() {
-		try {
-			while (true) {
-				if (tokenizer.hasMoreTokens()) {
-					return tokenizer.nextToken();
-				}
-				String s = reader.readLine();
-				if (s == null) {
-					return null;
-				}
-				tokenizer = new StringTokenizer(s, " \t\n\r");
-			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	public double getDouble() {
+    public double getDouble() {
 		return Double.parseDouble(getToken());
 	}
 
@@ -101,4 +121,24 @@ public class Template {
 		return new BigDecimal(getToken());
 	}
 
+    public class Solver implements Callable<String> {
+
+        private final int a;
+        private final int b;
+        private final int caseNumber;
+
+        // Do all input reading here!!
+        public Solver(int caseNumber) {
+            this.caseNumber = caseNumber;
+            a = getInt();
+            b = getInt();
+        }
+
+        // Do no reading here! This is run async!
+        // Solve the actual problem here
+        public String call() throws Exception {
+            debug("solving case %d", caseNumber);
+            return "" + (a + b);
+        }
+    }
 }
