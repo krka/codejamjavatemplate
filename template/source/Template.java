@@ -12,48 +12,48 @@ import java.util.StringTokenizer;
 import java.util.concurrent.*;
 
 public class Template {
-	private static String FILENAME = null;
-	static {
-		//FILENAME = "Template-sample";
-		//FILENAME = "Template-small";
-		//FILENAME = "Template-large";
-	}
+    private static String FILENAME = null;
+    static {
+        //FILENAME = "Template-sample";
+        //FILENAME = "Template-small";
+        //FILENAME = "Template-large";
+    }
 
-	public static void main(String[] args) {
-		new Template().run();
-	}
+    public static void main(String[] args) {
+        new Template().run();
+    }
 
-	private PrintStream out;
-	private final BufferedReader reader;
-	private StringTokenizer tokenizer = new StringTokenizer("");
+    private PrintStream out;
+    private final BufferedReader reader;
+    private StringTokenizer tokenizer = new StringTokenizer("");
 
-	public Template() {
-		try {
-			if (FILENAME == null) {
+    public Template() {
+        try {
+            if (FILENAME == null) {
                 out = System.out;
-				reader = new BufferedReader(new InputStreamReader(System.in));
-			} else {
-				out = new PrintStream(new FileOutputStream("source/" + FILENAME + ".out"));
-				reader = new BufferedReader(new FileReader("source/" + FILENAME + ".in"));
-			}
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-	}
+                reader = new BufferedReader(new InputStreamReader(System.in));
+            } else {
+                out = new PrintStream(new FileOutputStream("source/" + FILENAME + ".out"));
+                reader = new BufferedReader(new FileReader("source/" + FILENAME + ".in"));
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	public void run() {
-		try {
-			runCases();
-		} finally {
+    public void run() {
+        try {
+            runCases();
+        } finally {
             out.close();
         }
-	}
+    }
 
     public void debug(String s, Object... args) {
         System.err.printf("DEBUG: " + s + "\n", args);
     }
 
-	private void runCases() {
+    private void runCases() {
         int numProcs = Runtime.getRuntime().availableProcessors();
         debug("num processors: %d", numProcs);
         ExecutorService service = Executors.newFixedThreadPool(numProcs);
@@ -78,7 +78,7 @@ public class Template {
             }
         }
         debug("done with all!");
-	}
+    }
 
     public String readLine() {
         try {
@@ -99,27 +99,27 @@ public class Template {
             }
             tokenizer = new StringTokenizer(s, " \t\n\r");
         }
-	}
+    }
 
     public double getDouble() {
-		return Double.parseDouble(getToken());
-	}
+        return Double.parseDouble(getToken());
+    }
 
-	public int getInt() {
-		return Integer.parseInt(getToken());
-	}
+    public int getInt() {
+        return Integer.parseInt(getToken());
+    }
 
-	public long getLong() {
-		return Long.parseLong(getToken());
-	}
+    public long getLong() {
+        return Long.parseLong(getToken());
+    }
 
-	public BigInteger getBigInt() {
-		return new BigInteger(getToken());
-	}
+    public BigInteger getBigInt() {
+        return new BigInteger(getToken());
+    }
 
-	public BigDecimal getBigDec() {
-		return new BigDecimal(getToken());
-	}
+    public BigDecimal getBigDec() {
+        return new BigDecimal(getToken());
+    }
 
     public class Solver implements Callable<String> {
 
