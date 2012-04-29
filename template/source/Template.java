@@ -57,27 +57,31 @@ public class Template {
         int numProcs = Runtime.getRuntime().availableProcessors();
         debug("num processors: %d", numProcs);
         ExecutorService service = Executors.newFixedThreadPool(numProcs);
-        int cases = getInt();
-        ArrayList<Future<String>> list = new ArrayList<Future<String>>();
-        for (int c = 1; c <= cases; c++) {
-            Solver solver = new Solver(c);
-            list.add(service.submit(solver));
-        }
-        for (int c = 1; c <= cases; c++) {
-            Future<String> future = list.get(c - 1);
-            try {
-                String s = "Case #" + c + ": " + future.get();
-                out.println(s);
-                if (out != System.out) {
-                    System.out.println(s);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.getCause().printStackTrace();
+        try {
+            int cases = getInt();
+            ArrayList<Future<String>> list = new ArrayList<Future<String>>();
+            for (int c = 1; c <= cases; c++) {
+                Solver solver = new Solver(c);
+                list.add(service.submit(solver));
             }
+            for (int c = 1; c <= cases; c++) {
+                Future<String> future = list.get(c - 1);
+                try {
+                    String s = "Case #" + c + ": " + future.get();
+                    out.println(s);
+                    if (out != System.out) {
+                        System.out.println(s);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.getCause().printStackTrace();
+                }
+            }
+        } finally {
+            service.shutdown();
+            debug("done with all!");
         }
-        debug("done with all!");
     }
 
     public String readLine() {
