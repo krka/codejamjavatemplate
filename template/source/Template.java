@@ -12,6 +12,8 @@ import java.util.StringTokenizer;
 import java.util.concurrent.*;
 
 public class Template {
+    private static final boolean SINGLE_THREADED = true;
+
     private static String FILENAME = null;
     static {
         //FILENAME = "Template-sample";
@@ -61,21 +63,29 @@ public class Template {
             int cases = getInt();
             ArrayList<Future<String>> list = new ArrayList<Future<String>>();
             for (int c = 1; c <= cases; c++) {
-                Solver solver = new Solver(c);
-                list.add(service.submit(solver));
+                if (!SINGLE_THREADED) {
+                    Solver solver = new Solver(c);
+                    list.add(service.submit(solver));
+                }
             }
             for (int c = 1; c <= cases; c++) {
-                Future<String> future = list.get(c - 1);
                 try {
-                    String s = "Case #" + c + ": " + future.get();
+                    String answer;
+                    if (SINGLE_THREADED) {
+                        answer = new Solver(c).call();
+                    } else {
+                        Future<String> future = list.get(c - 1);
+                        answer = future.get();
+                    }
+                    String s = "Case #" + c + ": " + answer;
                     out.println(s);
                     if (out != System.out) {
                         System.out.println(s);
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 } catch (ExecutionException e) {
                     e.getCause().printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         } finally {
