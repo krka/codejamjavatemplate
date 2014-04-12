@@ -17,6 +17,7 @@ if [ -f user_config.py ]; then
   mv user_config.py config
 fi
 
+
 for p in A B C D E F G H I J K; do
   cp source/Template.java source/$p.java
   sed -i "s/Template/$p/" source/$p.java

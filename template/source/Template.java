@@ -1,5 +1,5 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,33 +14,48 @@ import java.util.concurrent.*;
 public class Template {
     private static final boolean SINGLE_THREADED = true;
 
-    private static String FILENAME = null;
-    static {
-        //FILENAME = "Template-sample";
-        //FILENAME = "Template-small";
-        //FILENAME = "Template-large";
-    }
+    private static final String INPUT = null; // override to use a specific input (i.e. "small-1", "large-2", "sample", "stdin").
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         new Template().run();
     }
 
-    private PrintStream out;
+    private final PrintStream out;
     private final BufferedReader reader;
     private StringTokenizer tokenizer = new StringTokenizer("");
 
-    public Template() {
-        try {
-            if (FILENAME == null) {
-                out = System.out;
-                reader = new BufferedReader(new InputStreamReader(System.in));
-            } else {
-                out = new PrintStream(new FileOutputStream("source/" + FILENAME + ".out"));
-                reader = new BufferedReader(new FileReader("source/" + FILENAME + ".in"));
+    public Template() throws Exception {
+        String problem = getClass().getSimpleName();
+        if (INPUT == null) {
+            File input = findInput(problem);
+            if (input == null) {
+                throw new IOException("No input file found");
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            out = new PrintStream(new FileOutputStream(new File(input.getParent(), input.getName().replace(".in", ".out"))));
+            reader = new BufferedReader(new FileReader(input));
+        } else if (INPUT.equals("stdin")) {
+            out = System.out;
+            reader = new BufferedReader(new InputStreamReader(System.in));
+        } else {
+            out = new PrintStream(new FileOutputStream(problem + "-" + INPUT + ".out"));
+            reader = new BufferedReader(new FileReader(problem + "-" + INPUT + ".in"));
         }
+    }
+
+    public static File findInput(String problem) throws Exception {
+        File dir = new File("source");
+        long bestTimestamp = -1;
+        File bestFile = null;
+        for (File file : dir.listFiles()) {
+           if (file.getName().startsWith(problem + "-") && file.getName().endsWith(".in")) {
+               long timestamp = file.lastModified();
+               if (timestamp > bestTimestamp) {
+                   bestTimestamp = timestamp;
+                   bestFile = file;
+               }
+           }
+        }
+        return bestFile;
     }
 
     public void run() {
