@@ -7,13 +7,9 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
-import java.util.concurrent.*;
 
 public class Template {
-    private static final boolean SINGLE_THREADED = true;
-
     private static final String INPUT = null; // override to use a specific input (i.e. "small-1", "large-2", "sample", "stdin").
 
     public static void main(String[] args) throws Exception {
@@ -78,40 +74,21 @@ public class Template {
     }
 
     private void runCases() {
-        int numProcs = Runtime.getRuntime().availableProcessors();
-        debug("num processors: %d", numProcs);
-        ExecutorService service = Executors.newFixedThreadPool(numProcs);
         try {
             int cases = getInt();
-            ArrayList<Future<String>> list = new ArrayList<Future<String>>();
-            for (int c = 1; c <= cases; c++) {
-                if (!SINGLE_THREADED) {
-                    Solver solver = new Solver(c);
-                    list.add(service.submit(solver));
-                }
-            }
             for (int c = 1; c <= cases; c++) {
                 try {
-                    String answer;
-                    if (SINGLE_THREADED) {
-                        answer = new Solver(c).call();
-                    } else {
-                        Future<String> future = list.get(c - 1);
-                        answer = future.get();
-                    }
+                    String answer = new Solver(c).solve();
                     String s = "Case #" + c + ": " + answer;
                     out.println(s);
                     if (out != System.out) {
                         System.out.println(s);
                     }
-                } catch (ExecutionException e) {
-                    e.getCause().printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         } finally {
-            service.shutdown();
             debug("done with all!");
         }
     }
@@ -157,24 +134,16 @@ public class Template {
         return new BigDecimal(getToken());
     }
 
-    public class Solver implements Callable<String> {
-
-        private final int a;
-        private final int b;
+    public class Solver {
         private final int caseNumber;
 
-        // Do all input reading here!!
         public Solver(int caseNumber) {
             this.caseNumber = caseNumber;
-            a = getInt();
-            b = getInt();
         }
 
-        // Do no reading here! This is run async!
-        // Solve the actual problem here
-        public String call() throws Exception {
+        public String solve() throws Exception {
             debug("solving case %d", caseNumber);
-            return "" + (a + b);
+            return "not implemented";
         }
     }
 }
