@@ -31,12 +31,19 @@ public class Template {
             if (input == null) {
                 throw new IOException("No input file found");
             }
-            out = new PrintStream(new FileOutputStream(new File(input.getParent(), input.getName().replace(".in", ".out"))));
+            File output = new File(input.getParent(), input.getName().replace(".in", ".out"));
+            System.err.println("input:  " + input.getPath());
+            System.err.println("output: " + output.getPath());
+            out = new PrintStream(new FileOutputStream(output));
             reader = new BufferedReader(new FileReader(input));
         } else if (INPUT.equals("stdin")) {
+            System.err.println("input:  stdin");
+            System.err.println("output: stdout");
             out = System.out;
             reader = new BufferedReader(new InputStreamReader(System.in));
         } else {
+            System.err.println("input:  " + problem + "-" + INPUT + ".in");
+            System.err.println("output: " + problem + "-" + INPUT + ".out");
             out = new PrintStream(new FileOutputStream(problem + "-" + INPUT + ".out"));
             reader = new BufferedReader(new FileReader(problem + "-" + INPUT + ".in"));
         }
