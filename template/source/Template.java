@@ -40,8 +40,8 @@ public class Template {
         } else {
             System.err.println("input:  " + problem + "-" + INPUT + ".in");
             System.err.println("output: " + problem + "-" + INPUT + ".out");
-            out = new PrintStream(new FileOutputStream(problem + "-" + INPUT + ".out"));
-            reader = new BufferedReader(new FileReader(problem + "-" + INPUT + ".in"));
+            out = new PrintStream(new FileOutputStream("source/" + problem + "-" + INPUT + ".out"));
+            reader = new BufferedReader(new FileReader("source/" + problem + "-" + INPUT + ".in"));
         }
     }
 
