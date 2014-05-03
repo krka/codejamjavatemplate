@@ -1,3 +1,8 @@
+/*
+ * This submission is using the template from https://github.com/krka/codejamjavatemplate
+ * Dependencies: standard java, google guava
+ * Revision: __REVISION__
+ */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;

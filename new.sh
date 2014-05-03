@@ -17,10 +17,12 @@ if [ -f user_config.py ]; then
   mv user_config.py config
 fi
 
+revision=`git rev-parse HEAD`
 
 for p in A B C D E F G H I J K; do
   cp source/Template.java source/$p.java
   sed -i "s/Template/$p/" source/$p.java
+  sed -i "s/__REVISION__/$revision/" source/$p.java
 done
 
 echo New directory: $NAME
