@@ -9,48 +9,54 @@ package a;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.StringTokenizer;
 
 public class Solution {
 
+  private final int caseNumber;
+  private final int A;
+  private final int B;
+
+  private Solution(int caseNumber) {
+    this.caseNumber = caseNumber;
+    // Read inputs here
+    A = getInt();
+    B = getInt();
+  }
+
+  private String solve() {
+    // Solve problem here
+    return "" + (A + B);
+  }
+
+  /**
+   * ONLY BOILERPLATE BELOW THIS POINT
+   */
+
+  private static BufferedReader reader;
+  private static StringTokenizer tokenizer = new StringTokenizer("");
+
   public static void main(String[] args) {
-    new Solution().run();
-  }
-
-  private final PrintStream out;
-  private final BufferedReader reader;
-  private StringTokenizer tokenizer = new StringTokenizer("");
-
-  public Solution() {
-    out = System.out;
     reader = new BufferedReader(new InputStreamReader(System.in));
-  }
-
-  public void run() {
     try {
       runCases();
     } finally {
-      out.close();
+      System.out.flush();
     }
   }
 
-  private void runCases() {
+  private static void runCases() {
     int cases = getInt();
     for (int c = 1; c <= cases; c++) {
-      try {
-        String answer = new Solver(c).solve();
-        String s = "Case #" + c + ": " + answer;
-        out.println(s);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+      String answer = new Solution(c).solve();
+      String s = "Case #" + c + ": " + answer;
+      System.out.println(s);
     }
   }
 
-  public String readLine() {
+  private static String readLine() {
     try {
       return reader.readLine();
     } catch (IOException e) {
@@ -58,7 +64,7 @@ public class Solution {
     }
   }
 
-  public String getToken() {
+  private static String getToken() {
     while (true) {
       if (tokenizer.hasMoreTokens()) {
         return tokenizer.nextToken();
@@ -71,36 +77,23 @@ public class Solution {
     }
   }
 
-  public double getDouble() {
+  private static double getDouble() {
     return Double.parseDouble(getToken());
   }
 
-  public int getInt() {
+  private static int getInt() {
     return Integer.parseInt(getToken());
   }
 
-  public long getLong() {
+  private static long getLong() {
     return Long.parseLong(getToken());
   }
 
-  public BigInteger getBigInt() {
+  private static BigInteger getBigInt() {
     return new BigInteger(getToken());
   }
 
-  public BigDecimal getBigDec() {
+  private static BigDecimal getBigDec() {
     return new BigDecimal(getToken());
-  }
-
-  public class Solver {
-
-    private final int caseNumber;
-
-    public Solver(int caseNumber) {
-      this.caseNumber = caseNumber;
-    }
-
-    public String solve() {
-      return "not implemented";
-    }
   }
 }
