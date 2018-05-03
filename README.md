@@ -1,6 +1,6 @@
 This is a Java/maven template for Google Codejam
 
-== Usage
+## Usage
 
 - Run `./new.sh` to generate a new project.
 - Open the new project in IntelliJ.
@@ -10,7 +10,7 @@ This is a Java/maven template for Google Codejam
 
 That's it!
 
-== Features
+## Features
 
 * Helper functions to read input
 * Automatically format output for most cases
