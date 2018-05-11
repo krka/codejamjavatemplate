@@ -20,5 +20,7 @@ for p in b c d e f g h i j k; do
   cp src/test/resources/A-sample.txt src/test/resources/$P-sample.txt
 done
 
+sed -i "s/__REVISION__/$revision/" src/main/java/a/Solution.java
+
 echo New directory: $NAME
 
