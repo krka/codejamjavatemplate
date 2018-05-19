@@ -54,12 +54,18 @@ public class TestUtil {
 
   private static boolean parseTestData(final Writer expectedData, final Writer inputData, final List<String> lines) throws IOException {
     boolean ok = true;
+    boolean expected = false;
     for (final String line : lines) {
-      if (line.startsWith("#")) {
+      if (expected) {
+        expectedData.write(line);
+        expectedData.write('\n');
+      } else if (line.startsWith("#")) {
         final String removed = removePrefix(line, "## Expected: ");
         if (removed != null) {
           expectedData.write(removed);
           expectedData.write('\n');
+        } else if (removePrefix(line, "## Expected") != null) {
+          expected = true;
         } else {
           System.err.println("Unhandled line: " + line);
           ok = false;
